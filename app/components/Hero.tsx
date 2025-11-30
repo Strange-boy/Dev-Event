@@ -2,33 +2,67 @@
 
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
 const ThreeBackground = dynamic(() => import('./ThreeBackground'), { ssr: false });
 
 export default function Hero() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
   return (
-    <section className="relative overflow-hidden bg-gray-900 pt-32 pb-20 lg:pt-48 lg:pb-32">
+    <section ref={ref} className="relative overflow-hidden bg-gray-900 pt-32 pb-20 lg:pt-48 lg:pb-32 min-h-[80vh] flex items-center">
       <ThreeBackground />
       
-      <div className="container mx-auto px-4 relative z-10 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-800 border border-gray-700 text-sm text-gray-300 mb-8">
+      <motion.div 
+        style={{ y, opacity }}
+        className="container mx-auto px-4 relative z-10 text-center"
+      >
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-800 border border-gray-700 text-sm text-gray-300 mb-8"
+        >
           <span className="flex h-2 w-2 rounded-full bg-green-500"></span>
           Over 500+ events added this week
-        </div>
+        </motion.div>
         
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6">
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6"
+        >
           Never Miss a <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
             Developer Event
           </span>
-        </h1>
+        </motion.h1>
         
-        <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="text-xl text-gray-400 max-w-2xl mx-auto mb-10"
+        >
           The ultimate hub for hackathons, conferences, and tech meetups. 
           Curated for developers, by developers.
-        </p>
+        </motion.p>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center"
+        >
           <Link 
             href="/events" 
             className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium transition-all hover:scale-105 shadow-lg shadow-blue-500/25"
@@ -41,8 +75,8 @@ export default function Hero() {
           >
             Post an Event
           </Link>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }
